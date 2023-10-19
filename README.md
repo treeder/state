@@ -1,11 +1,16 @@
 # state
-JavaScript client side state using modules. Super simple.
+
+Super lightweight JavaScript state library using ESM modules. Modern and easy to use.
+
+Features:
+
+* Uses localStorage so state remains intact even if user leaves and comes back.
+* Can listen for state changes from anywhere, even across browser tabs!
 
 ## Usage
 
 Import this library:
 
-```js
 ```js
 <script type="module">
 import state from 'https://cdn.jsdelivr.net/gh/treeder/state@0/state.js'

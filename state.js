@@ -1,14 +1,60 @@
 
-class State extends EventTarget { // implements EventTarget (partially anyways) https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+export class State extends EventTarget { // implements EventTarget (partially anyways) https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+
+    static stateKey = 'state'
+    static statePrefix = 'state.'
 
     constructor() {
         super()
 
-        this.stateMap = new Map()
+        this.loadState()
+
+        window.addEventListener('storage', (e) => {
+            // console.log("storage event", e)
+            if (e.key.startsWith(State.statePrefix)) {
+                let key = e.key.substring(State.statePrefix.length)
+                this.dispatchEvent(new CustomEvent(key, {
+                    detail: {
+                        action: e.newValue ? 'set' : 'delete',
+                        key: key,
+                        value: e.newValue,
+                    },
+                }))
+            }
+        })
+    }
+
+    loadState() {
+        // NOTE: I may drop the 'state' object from local storage and just use individual keys, better for event handling.
+        const storedState = localStorage.getItem(State.stateKey)
+        if (!storedState) return null
+        // console.log("storedState:", storedState)
+        let state = null
+        try {
+            state = JSON.parse(storedState)
+            // console.log("storedState:", state)
+        } catch (err) {
+            console.error("error parsing stored state:", err)
+        }
+        this.stateMap = new Map(Object.entries(state))
+
+        // the alternative way using individual keys
+        for (let key in localStorage) {
+            let value = localStorage.getItem(key)
+            this.stateMap.set(key, value)
+        }
+
+        return state
+    }
+
+    saveState() {
+        localStorage.setItem(State.stateKey, JSON.stringify(Object.fromEntries(this.stateMap)))
     }
 
     set(key, value) {
         let m = this.stateMap.set(key, value)
+        localStorage.setItem(`${State.statePrefix}${key}`, JSON.stringify(value))
+        this.saveState()
         this.dispatchEvent(new CustomEvent(key, {
             detail: {
                 action: 'set',
@@ -21,6 +67,8 @@ class State extends EventTarget { // implements EventTarget (partially anyways) 
 
     delete(key) {
         let r = this.stateMap.delete(key)
+        localStorage.removeItem(`${State.statePrefix}${key}`)
+        this.saveState()
         this.dispatchEvent(new CustomEvent(key, {
             detail: {
                 action: 'delete',
@@ -36,5 +84,5 @@ class State extends EventTarget { // implements EventTarget (partially anyways) 
 
 }
 
-const state = new State()
+export const state = new State()
 export default state
