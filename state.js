@@ -27,12 +27,15 @@ export class State extends EventTarget { // implements EventTarget (partially an
     loadState() {
         // NOTE: I may drop the 'state' object from local storage and just use individual keys, better for event handling.
         const storedState = localStorage.getItem(State.stateKey)
-        if (!storedState) return null
-        // console.log("storedState:", storedState)
+        if (!storedState) {
+            this.stateMap = new Map()
+            return null
+        }
+        console.log("storedState:", storedState)
         let state = null
         try {
             state = JSON.parse(storedState)
-            // console.log("storedState:", state)
+            console.log("storedState:", state)
         } catch (err) {
             console.error("error parsing stored state:", err)
         }
@@ -43,7 +46,6 @@ export class State extends EventTarget { // implements EventTarget (partially an
             let value = localStorage.getItem(key)
             this.stateMap.set(key, value)
         }
-
         return state
     }
 

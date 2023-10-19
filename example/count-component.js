@@ -20,7 +20,7 @@ class CountComponent extends LitElement {
 
     connectedCallback() {
         super.connectedCallback()
-        this.counter = state.get('counter')
+        this.counter = state.get('counter') || 0
         console.log("got counter 1:", this.counter)
         state.addEventListener('counter', (e) => {
             console.log("counter event", e)
