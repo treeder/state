@@ -50,6 +50,7 @@ export class State extends EventTarget { // implements EventTarget (partially an
     }
 
     saveState() {
+        // can probably ditch this whole state object now that we're using individual keys
         localStorage.setItem(State.stateKey, JSON.stringify(Object.fromEntries(this.stateMap)))
     }
 
