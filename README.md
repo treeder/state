@@ -32,6 +32,19 @@ Update state elsewhere:
 state.set('car', car)
 ```
 
+Fetch state on page load:
+
+```js
+state.get('car')
+```
+
+Delete from the state:
+
+```js
+state.delete('car')
+```
+
+
 💥 That's it!
 
 You can use this anywhere, including in web components.
