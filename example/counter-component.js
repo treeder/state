@@ -7,12 +7,14 @@ import state from '../state.js'
 
 class CounterComponent extends LitElement {
     static properties = {
-        counter: { type: Number }
+        counter: { type: Number },
+        counter2: { type: String },
     }
 
     constructor() {
         super();
         this.counter = 0
+        this.counter2 = ''
     }
 
     connectedCallback() {
@@ -23,11 +25,16 @@ class CounterComponent extends LitElement {
             console.log("counter event", e)
             this.counter = e.detail.value
         })
+        state.addEventListener('counter2', (e) => {
+            console.log("counter2 event", e)
+            this.counter2 = e.detail.value
+        })
     }
 
     render() {
         return html`
             <div>${this.counter}</div>
+            <div>${this.counter2}</div>
             <md-filled-button @click=${this.increment}>Increment</md-filled-button>
         `
     }
@@ -35,6 +42,7 @@ class CounterComponent extends LitElement {
     increment() {
         this.counter++
         state.set('counter', this.counter)
+        state.set('counter2', `c:${this.counter}`)
     }
 
 }

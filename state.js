@@ -10,14 +10,18 @@ export class State extends EventTarget { // implements EventTarget (partially an
         this.loadState()
 
         window.addEventListener('storage', (e) => {
-            // console.log("storage event", e)
             if (e.key.startsWith(State.statePrefix)) {
+                console.log("storage event", e)
                 let key = e.key.substring(State.statePrefix.length)
+                let value = null
+                if (e.newValue) {
+                    value = JSON.parse(e.newValue)
+                }
                 this.dispatchEvent(new CustomEvent(key, {
                     detail: {
-                        action: e.newValue ? 'set' : 'delete',
+                        action: value ? 'set' : 'delete',
                         key: key,
-                        value: e.newValue,
+                        value: value,
                     },
                 }))
             }
@@ -44,6 +48,7 @@ export class State extends EventTarget { // implements EventTarget (partially an
         // the alternative way using individual keys
         for (let key in localStorage) {
             let value = localStorage.getItem(key)
+            value = JSON.parse(value)
             this.stateMap.set(key, value)
         }
         return state
