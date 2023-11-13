@@ -11,7 +11,7 @@ export class State extends EventTarget { // implements EventTarget (partially an
 
         window.addEventListener('storage', (e) => {
             if (e.key.startsWith(State.statePrefix)) {
-                console.log("storage event", e)
+                // console.log("storage event", e)
                 let key = e.key.substring(State.statePrefix.length)
                 let value = null
                 if (e.newValue) {
@@ -35,11 +35,11 @@ export class State extends EventTarget { // implements EventTarget (partially an
             this.stateMap = new Map()
             return null
         }
-        console.log("storedState:", storedState)
+        // console.log("storedState:", storedState)
         let state = null
         try {
             state = JSON.parse(storedState)
-            console.log("storedState:", state)
+            // console.log("storedState:", state)
         } catch (err) {
             console.error("error parsing stored state:", err)
         }
