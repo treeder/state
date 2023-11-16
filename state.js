@@ -47,9 +47,11 @@ export class State extends EventTarget { // implements EventTarget (partially an
 
         // the alternative way using individual keys
         for (let key in localStorage) {
-            let value = localStorage.getItem(key)
-            value = JSON.parse(value)
-            this.stateMap.set(key, value)
+            if (key.startsWith(State.statePrefix)) {
+                let value = localStorage.getItem(key)
+                value = JSON.parse(value)
+                this.stateMap.set(key, value)
+            }
         }
         return state
     }
@@ -70,7 +72,7 @@ export class State extends EventTarget { // implements EventTarget (partially an
                 value,
             },
         }))
-        return m // can chain calls together
+        return m
     }
 
     delete(key) {
