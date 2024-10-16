@@ -30,7 +30,7 @@ export class State extends EventTarget { // implements EventTarget (partially an
 
     loadState() {
         // NOTE: I may drop the 'state' object from local storage and just use individual keys, better for event handling.
-        const storedState = localStorage.getItem(State.stateKey)
+        const storedState = window.localStorage.getItem(State.stateKey)
         if (!storedState) {
             this.stateMap = new Map()
             return null
@@ -46,9 +46,9 @@ export class State extends EventTarget { // implements EventTarget (partially an
         this.stateMap = new Map(Object.entries(state))
 
         // the alternative way using individual keys
-        for (let key in localStorage) {
+        for (let key in window.localStorage) {
             if (key.startsWith(State.statePrefix)) {
-                let value = localStorage.getItem(key)
+                let value = window.localStorage.getItem(key)
                 value = JSON.parse(value)
                 this.stateMap.set(key, value)
             }
@@ -58,12 +58,12 @@ export class State extends EventTarget { // implements EventTarget (partially an
 
     saveState() {
         // can probably ditch this whole state object now that we're using individual keys
-        localStorage.setItem(State.stateKey, JSON.stringify(Object.fromEntries(this.stateMap)))
+        window.localStorage.setItem(State.stateKey, JSON.stringify(Object.fromEntries(this.stateMap)))
     }
 
     set(key, value) {
         let m = this.stateMap.set(key, value)
-        localStorage.setItem(`${State.statePrefix}${key}`, JSON.stringify(value))
+        window.localStorage.setItem(`${State.statePrefix}${key}`, JSON.stringify(value))
         this.saveState()
         this.dispatchEvent(new CustomEvent(key, {
             detail: {
@@ -77,7 +77,7 @@ export class State extends EventTarget { // implements EventTarget (partially an
 
     delete(key) {
         let r = this.stateMap.delete(key)
-        localStorage.removeItem(`${State.statePrefix}${key}`)
+        window.localStorage.removeItem(`${State.statePrefix}${key}`)
         this.saveState()
         this.dispatchEvent(new CustomEvent(key, {
             detail: {
