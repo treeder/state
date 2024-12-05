@@ -2,6 +2,8 @@
 
 Super lightweight JavaScript state library using ESM modules. Modern and easy to use.
 
+Uses the standard [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) interface.
+
 Features:
 
 * Uses localStorage so state remains intact even if user leaves and comes back.
