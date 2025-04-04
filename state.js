@@ -32,10 +32,8 @@ export class State extends EventTarget { // implements EventTarget (partially an
   loadState() {
     // the alternative way using individual keys
     for (let key in window.localStorage) {
-      console.log("KEY:", key)
       if (key.startsWith(State.statePrefix)) {
         let value = window.localStorage.getItem(key)
-        console.log("value:", value)
         value = JSON.parse(value)
         this.stateMap.set(key.substring(State.statePrefix.length), value)
       }
