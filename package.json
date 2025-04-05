@@ -1,0 +1,19 @@
+{
+  "name": "state",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A lightweight state library using modern modules.",
+  "main": "state.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/treeder/state"
+  },
+  "author": "@treeder",
+  "license": "ISC"
+}
