@@ -15,7 +15,7 @@ Import this library:
 
 ```js
 <script type="module">
-import state from 'https://cdn.jsdelivr.net/gh/treeder/state@0/state.js'
+import state from 'https://cdn.jsdelivr.net/gh/treeder/state@1/state.js'
 </script>
 ```
 
