@@ -34,8 +34,12 @@ export class State extends EventTarget { // implements EventTarget (partially an
     for (let key in window.localStorage) {
       if (key.startsWith(State.statePrefix)) {
         let value = window.localStorage.getItem(key)
-        value = JSON.parse(value)
-        this.stateMap.set(key.substring(State.statePrefix.length), value)
+        try {
+          value = JSON.parse(value)
+          this.stateMap.set(key.substring(State.statePrefix.length), value)
+        } catch (e) {
+          console.log(`[state] ${key} invalid json`)
+        }
       }
     }
   }
