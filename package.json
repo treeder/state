@@ -1,6 +1,6 @@
 {
   "name": "state",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "type": "module",
   "description": "A lightweight state library using modern modules.",
   "main": "state.js",
