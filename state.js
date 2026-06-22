@@ -1,45 +1,62 @@
 export class State extends EventTarget {
   // implements EventTarget (partially anyways) https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
 
-  static statePrefix = "state.";
+  static statePrefix = 'state.'
 
-  constructor() {
-    super();
+  constructor(options = {}) {
+    super()
 
-    this.stateMap = new Map();
+    this.options = options
+    this.storage = options.storage || 'local'
 
-    this.loadState();
+    if (this.storage === 'local') {
+      this.storageObj = typeof window !== 'undefined' ? window.localStorage : null
+    } else if (this.storage === 'session') {
+      this.storageObj = typeof window !== 'undefined' ? window.sessionStorage : null
+    } else {
+      this.storageObj = this.storage
+    }
 
-    window.addEventListener("storage", (e) => {
-      if (e.key.startsWith(State.statePrefix)) {
-        // console.log("storage event", e)
-        let key = e.key.substring(State.statePrefix.length);
-        let value = null;
-        if (e.newValue) {
-          value = JSON.parse(e.newValue);
+    this.stateMap = new Map()
+
+    this.loadState()
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (e) => {
+        if (e.storageArea && e.storageArea !== this.storageObj) {
+          return
         }
-        this.dispatchEvent(
-          new CustomEvent(key, {
-            detail: {
-              action: value ? "set" : "delete",
-              key: key,
-              value: value,
-            },
-          }),
-        );
-      }
-    });
+        if (e.key && e.key.startsWith(State.statePrefix)) {
+          // console.log("storage event", e)
+          let key = e.key.substring(State.statePrefix.length)
+          let value = null
+          if (e.newValue) {
+            value = JSON.parse(e.newValue)
+          }
+          this.dispatchEvent(
+            new CustomEvent(key, {
+              detail: {
+                action: value ? 'set' : 'delete',
+                key,
+                value,
+              },
+            }),
+          )
+        }
+      })
+    }
   }
 
   loadState() {
-    for (let key in window.localStorage) {
+    if (!this.storageObj) return
+    for (const key in this.storageObj) {
       if (key.startsWith(State.statePrefix)) {
-        let value = window.localStorage.getItem(key);
+        let value = this.storageObj.getItem(key)
         try {
-          value = JSON.parse(value);
-          this.stateMap.set(key.substring(State.statePrefix.length), value);
+          value = JSON.parse(value)
+          this.stateMap.set(key.substring(State.statePrefix.length), value)
         } catch (e) {
-          console.log(`[state] ${key} invalid json`);
+          console.log(`[state] ${key} invalid json`)
         }
       }
     }
@@ -50,46 +67,45 @@ export class State extends EventTarget {
    * @param {string} key
    * @param {any} value
    * @param {object} opts
-   * @param {boolean} [opts.skipStorage=false] if true, the value will not be stored in localStorage
+   * @param {boolean} [opts.skipStorage=false] if true, the value will not be stored in storage
    */
   set(key, value, opts = {}) {
-    let m = this.stateMap.set(key, value);
-    if (!opts.skipStorage) {
-      window.localStorage.setItem(
-        `${State.statePrefix}${key}`,
-        JSON.stringify(value),
-      );
+    const m = this.stateMap.set(key, value)
+    if (!opts.skipStorage && this.storageObj) {
+      this.storageObj.setItem(`${State.statePrefix}${key}`, JSON.stringify(value))
     }
     this.dispatchEvent(
       new CustomEvent(key, {
         detail: {
-          action: "set",
+          action: 'set',
           key,
           value,
         },
       }),
-    );
-    return m;
+    )
+    return m
   }
 
   delete(key) {
-    let r = this.stateMap.delete(key);
-    window.localStorage.removeItem(`${State.statePrefix}${key}`);
+    const r = this.stateMap.delete(key)
+    if (this.storageObj) {
+      this.storageObj.removeItem(`${State.statePrefix}${key}`)
+    }
     this.dispatchEvent(
       new CustomEvent(key, {
         detail: {
-          action: "delete",
+          action: 'delete',
           key,
           deleted: r, // true if element existed and was removed, or false if the element did not exist.
         },
       }),
-    );
+    )
   }
 
   get(key) {
-    return this.stateMap.get(key);
+    return this.stateMap.get(key)
   }
 }
 
-export const state = new State();
-export default state;
+export const state = new State()
+export default state

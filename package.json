@@ -1,6 +1,6 @@
 {
   "name": "state",
-  "version": "2.0.3",
+  "version": "3.0.0",
   "type": "module",
   "description": "A lightweight state library using modern modules.",
   "main": "state.js",
@@ -23,5 +23,8 @@
     "trailingComma": "all",
     "printWidth": 120,
     "bracketSameLine": true
+  },
+  "devDependencies": {
+    "prettier": "^3.8.4"
   }
 }
