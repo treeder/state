@@ -15,5 +15,13 @@
     "url": "github.com/treeder/state"
   },
   "author": "@treeder",
-  "license": "MIT"
+  "license": "MIT",
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "all",
+    "printWidth": 120,
+    "bracketSameLine": true
+  }
 }
