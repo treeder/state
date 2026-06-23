@@ -35,8 +35,8 @@ export class State extends EventTarget {
           if (e.newValue) {
             try {
               const parsed = JSON.parse(e.newValue)
-              value = parsed.value
-              expiresAt = parsed.expiresAt
+              value = parsed?.value
+              expiresAt = parsed?.expiresAt
             } catch (err) {
               console.log(`[state] ${e.key} invalid json`)
             }
@@ -66,6 +66,7 @@ export class State extends EventTarget {
                 detail: {
                   action: 'delete',
                   key,
+                  value: null,
                   deleted: r,
                 },
               }),
@@ -82,7 +83,9 @@ export class State extends EventTarget {
       if (key.startsWith(State.statePrefix)) {
         let raw = this.storageObj.getItem(key)
         try {
-          const { value, expiresAt } = JSON.parse(raw)
+          const parsed = JSON.parse(raw)
+          const value = parsed?.value
+          const expiresAt = parsed?.expiresAt
           const stateKey = key.substring(State.statePrefix.length)
           if (expiresAt && Date.now() > expiresAt) {
             this.storageObj.removeItem(key)
