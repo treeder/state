@@ -6,25 +6,23 @@ Uses the standard [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/
 
 Features:
 
-* Uses localStorage so state remains intact even if user leaves and comes back.
-* Can listen for state changes from anywhere, even across browser tabs!
+- Uses localStorage so state remains intact even if user leaves and comes back.
+- Can listen for state changes from anywhere, even across browser tabs!
 
 ## Usage
 
 Import this library:
 
 ```js
-<script type="module">
-import state from 'https://cdn.jsdelivr.net/gh/treeder/state@1/state.js'
-</script>
+<script type="module">import state from 'https://cdn.jsdelivr.net/gh/treeder/state@3/state.js'</script>
 ```
 
 Add listeners:
 
 ```js
 state.addEventListener('car', (e) => {
-    console.log("car change event:", e.detail)
-    this.car = e.detail.value
+  console.log('car change event:', e.detail)
+  this.car = e.detail.value
 })
 ```
 
@@ -32,6 +30,12 @@ Update state elsewhere:
 
 ```js
 state.set('car', car)
+```
+
+Set state with a Time-To-Live (TTL) in milliseconds (e.g., expires in 5 seconds):
+
+```js
+state.set('car', car, { ttl: 5000 })
 ```
 
 Fetch state on page load:
@@ -46,6 +50,19 @@ Delete from the state:
 state.delete('car')
 ```
 
+## Storage Options
+
+By default, the default `state` export uses `localStorage`. You can import the `State` class to create a new instance with a different storage backend (such as `sessionStorage` or a custom storage object):
+
+```js
+import { State } from 'https://cdn.jsdelivr.net/gh/treeder/state@3/state.js'
+
+// Use sessionStorage
+const sessionState = new State({ storage: 'session' })
+
+// Use a custom storage backend
+const customState = new State({ storage: myCustomStorageObj })
+```
 
 💥 That's it!
 
