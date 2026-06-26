@@ -52,13 +52,21 @@ state.delete('car')
 
 ## Storage Options
 
-By default, the default `state` export uses `localStorage`. You can import the `State` class to create a new instance with a different storage backend (such as `sessionStorage` or a custom storage object):
+By default, the default `state` export uses `localStorage`. You can import the `State` class to create a new instance with a different storage backend:
+
+- `'local'` (default): Uses `localStorage` (persists across page reloads and tab/browser sessions).
+- `'session'`: Uses `sessionStorage` (persists across page reloads, but resets when the tab is closed).
+- `'memory'`: Ephemeral in-memory storage (resets on page reload or navigation). Useful for communicating across component boundaries on the current page without persisting state.
+- Or pass a custom storage object conforming to the `Storage` API.
 
 ```js
 import { State } from 'https://cdn.jsdelivr.net/gh/treeder/state@3/state.js'
 
 // Use sessionStorage
 const sessionState = new State({ storage: 'session' })
+
+// Use in-memory storage (reset on page reloads)
+const memoryState = new State({ storage: 'memory' })
 
 // Use a custom storage backend
 const customState = new State({ storage: myCustomStorageObj })

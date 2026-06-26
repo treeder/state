@@ -13,6 +13,8 @@ export class State extends EventTarget {
       this.storageObj = typeof window !== 'undefined' ? window.localStorage : null
     } else if (this.storage === 'session') {
       this.storageObj = typeof window !== 'undefined' ? window.sessionStorage : null
+    } else if (this.storage === 'memory') {
+      this.storageObj = null
     } else {
       this.storageObj = this.storage
     }
